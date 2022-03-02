@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session
 from app.models import Goods, Img
 from app import app
-
+main_page_bp = Blueprint('main_page',__name__)
 
 
 @app.route('/')

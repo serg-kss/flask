@@ -39,7 +39,7 @@ from app.card.card import card_page_bp
 
 app.register_blueprint(card_page_bp)
 app.register_blueprint(admin_bp, url_prefix="/admin")
-
+app.register_blueprint(main_page_bp)
 
 
 
