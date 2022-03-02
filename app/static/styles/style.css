@@ -1,0 +1,77 @@
+body{
+   background-image: url(../img/back4.png);
+   overflow-x: hidden;
+}
+
+#inst{
+   padding: 15px;
+   text-decoration: none;
+   color:black;
+   }
+   
+   #inst:hover i{
+   cursor: pointer;
+   color: #db3884;
+   -webkit-transform: scale(2.0);
+   -ms-transform: scale(2.0);
+   transform: scale(2.0); 
+   }
+   
+   
+   #facebook{
+   text-decoration: none;
+   color:black;
+   padding: 15px;
+   }
+   #facebook:hover i{   
+   cursor: pointer;
+   color: #2c16eb;
+   -webkit-transform: scale(2.0);
+   -ms-transform: scale(2.0);
+   transform: scale(2.0);  
+   }
+   #youtube{
+   padding: 15px;
+   text-decoration: none;
+   color: black;
+   }
+   #youtube:hover i{ 
+   cursor: pointer;
+   color: #f00b0b;
+   -webkit-transform: scale(2.0);
+   -ms-transform: scale(2.0);
+   transform: scale(2.0);  
+   }
+   
+   #map{
+   
+   width: 400px; 
+   height: 400px; 
+   
+   }
+   
+   #empt{
+   height: 50px;
+   }
+   
+   footer .up-btn{
+   width: 50px;
+   height: 50px;
+   text-align: center;
+   line-height: 50px;
+   border-radius: 50%;
+   background: #eee;
+   border: 1px solid silver;
+   cursor: pointer;
+   color: #3b3b3b;
+   transition: transform 600ms ease;
+   
+   }
+   
+   footer .up-btn:hover{
+   transform: translateY(-10px);
+   }
+   footer .up-btn:hover i{
+   color: green;
+   
+   } 

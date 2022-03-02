@@ -1,0 +1,57 @@
+{% extends 'base1.html' %}
+
+{% block title %}
+<title>Добавить изображение в БД</title>
+{% endblock title %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <h3 class="mt-5">Добавить изображение в БД:</h3>
+            <p>Вводимый артикул должен быть обязательно идентичным артикулу товара!</p>
+            <form enctype="multipart/form-data" method="POST" align="center">
+                <input type="text" class="form-control" name="code" id="code" placeholder="введите артикул"><br> 
+                <div class="mb-3">
+                    <input class="form-control" type="file" id="formFile" name="pic">
+                  </div>
+                <input type="submit" class="btn btn-success mt-4" value="Загрузить изображение"/>
+            </form>                      
+            <a href="/admin" class="btn btn-warning mt-3">Назад в админ панель</a>
+            <div class="mt-5">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <ul class=flashes>
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endwith %}
+            </div>
+            
+        </div>
+        <div class="col-4"></div>
+    </div>    
+</div>
+
+  
+  
+  
+  
+
+   
+
+  
+
+   
+
+   
+
+  
+   
+
+
+{% endblock body %}

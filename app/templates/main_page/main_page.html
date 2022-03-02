@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Онлайн магазин</title>
+{% endblock title %}
+
+{% block body %}
+
+
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+    <div class="container-fluid">
+      <a class="navbar-brand m-1" href="/"><span style="font-style: italic;">KSS shop</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExample03">
+        <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-5">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Главная</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">Контакты</a>
+          </li>         
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Товары</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown03">
+              <li><a class="dropdown-item" href="#">Диски</a></li>
+              <li><a class="dropdown-item" href="#">Легковые шины</a></li>
+              <li><a class="dropdown-item" href="#">Авто товары</a></li>
+            </ul>
+          </li>
+        </ul>            
+          <a href="/admin/login" class="btn btn-outline-light m-1">
+            {% if current_user.is_authenticated and current_user.has_role('admin') %}
+              Админ
+            {% elif current_user.is_authenticated and current_user.has_role('user')%}
+              Гость
+            {% else %}
+              Войти        
+            {% endif %}
+          </a>
+          {% if 'card' not in data[2] %}
+
+          <button type="button" class="btn btn-outline-secondary m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Корзина
+          </button>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body align-content-center">
+                  <h5>Ваша корзина пуста!</h5><br>
+                  <h6>Самое время это исправить!</h6>           
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-info" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <a href="/card" class="btn btn-outline-warning m-1">Корзина</a>
+          {% endif %}
+          
+
+          <div class="dropdown">
+            <a class="btn btn btn-warning m-1 mx-5" href="/" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              Язык
+            </a>        
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item" href="/"><img src="static/img/ukr.png" alt=""> Українська мова</a></li>
+              <li><a class="dropdown-item" href="/"><img src="static/img/rus.png" alt=""> Русский язык</a></li>
+            </ul>  
+          </div>        
+      </div>
+    </div>
+  </nav>
+
+
+
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center mt-5">
+{% for el in data[0] %}
+  
+  <div class="col">
+    <div class="card mb-4 rounded-3 shadow-sm">
+      <div class="card-header py-3">
+        <h4 class="my-0 fw-normal">{{el.name}}</h4>
+      </div>
+      <div class="card-body">
+        {% for pic in data[1] %}
+          {% if pic.code_of_pic==el.code_of_item %}
+            <img src="data:image/png;base64,{{pic.img}}" alt="Red dot" />
+          {% endif %}       
+        {% endfor %}
+        <h1 class="card-title pricing-card-title">{{el.price}}<small class="text-muted fw-light"> UAH</small></h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          {%if el.amount > 0 %}
+            <li><span style="text-decoration: underline; color: green;">Есть в наличии</span></li>
+            <li>На складе: {{el.amount}}</li>
+
+            <a href="/card/{{ el.code_of_item }}" class="btn btn-sm btn-outline-primary mt-4">В корзину</a>
+            <a href="/buy/{{ el.id }}" class="btn btn-sm btn-outline-primary mt-4">Купить</a>
+          {% else %}
+            <li><span style="text-decoration: underline; color: red;">Нет в наличии</span></li>
+            <li class="text-muted fw-light">На складе: -</li>
+
+            <a href="/" class="btn btn-sm btn-outline-secondary mt-4">В корзину</a>
+            <a href="/" class="btn btn-sm btn-outline-secondary mt-4">Купить</a>
+            
+          {% endif %}                  
+        </ul>        
+      </div>
+    </div>
+  </div>   
+{% endfor %}
+</div>  
+
+   <h2 class="display-6 text-center mb-4">Compare plans</h2>
+
+   <div class="table-responsive">
+     <table class="table text-center">
+       <thead>
+         <tr>
+           <th style="width: 34%;"></th>
+           <th style="width: 22%;">Free</th>
+           <th style="width: 22%;">Pro</th>
+           <th style="width: 22%;">Enterprise</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <th scope="row" class="text-start">Public</th>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+         <tr>
+           <th scope="row" class="text-start">Private</th>
+           <td></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+       </tbody>
+
+       <tbody>
+         <tr>
+           <th scope="row" class="text-start">Permissions</th>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+         <tr>
+           <th scope="row" class="text-start">Sharing</th>
+           <td></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+         <tr>
+           <th scope="row" class="text-start">Unlimited members</th>
+           <td></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+         <tr>
+           <th scope="row" class="text-start">Extra security</th>
+           <td></td>
+           <td></td>
+           <td><svg class="bi" width="24" height="24"><use xlink:href="#check"></use></svg></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+ 
+{% endblock body %}
+
+

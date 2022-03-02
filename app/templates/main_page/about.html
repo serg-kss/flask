@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Контакты</title>
+{% endblock title %}
+
+{% block body %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+  <div class="container-fluid">
+    <a class="navbar-brand m-1" href="/"><span style="font-style: italic;">KSS shop</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample03">
+      <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-5">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/about">Контакты</a>
+        </li>         
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Товары</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown03">
+            <li><a class="dropdown-item" href="#">Диски</a></li>
+            <li><a class="dropdown-item" href="#">Легковые шины</a></li>
+            <li><a class="dropdown-item" href="#">Авто товары</a></li>
+          </ul>
+        </li>
+      </ul>
+           
+      <a href="/admin/login" class="btn btn-outline-light m-1">
+        {% if current_user.is_authenticated and current_user.has_role('admin') %}
+          Админ
+        {% elif current_user.is_authenticated and current_user.has_role('user')%}
+          Гость
+        {% else %}
+          Войти        
+        {% endif %}
+      </a>
+      {% if 'card' not in data %}
+
+      <button type="button" class="btn btn-outline-secondary m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Корзина
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body align-content-center">
+              <h5>Ваша корзина пуста!</h5><br>
+              <h6>Самое время это исправить!</h6>           
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-info" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <a href="/card" class="btn btn-outline-warning m-1">Корзина</a>
+      {% endif %}
+
+
+        <div class="dropdown">
+          <a class="btn btn btn-warning m-1 mx-5" href="/" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            Язык
+          </a>
+      
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" href="/"><img src="static/img/ukr.png" alt=""> Українська мова</a></li>
+            <li><a class="dropdown-item" href="/"><img src="static/img/rus.png" alt=""> Русский язык</a></li>
+          </ul>  
+        </div>        
+    </div>
+  </div>
+</nav>
+
+<h1 class="mt-5">Про магазин:</h1>
+<p>Написание текстов для главных страниц сайта – дело непростое. Проблема в том, что существует сразу несколько подходов к подготовке таких материалов.
+
+  Каждый подход, как это и водится, имеет свои плюсы и минусы. Где-то можно выиграть в оптимизации, но потерять в живых читателях. Где-то можно приобрести живых читателей, но придется жертвовать SEO-показателями и, возможно, по этой причине отставать от конкурентов.
+  
+  Постоянные сомнения, касающиеся оптимальных путей создания текстов для главной, стали вполне привычными спутниками авторов.
+  
+  Кто-то постоянно работает под одной и той же схеме, кто-то мечется между SEO и продающими текстами, а кто-то и вовсе не имеет четкого видения. Чтобы хоть как-то определиться с тем, как писать тексты для главных страниц, мы составили эту небольшую заметку. На полноценный научный труд претендовать не собираемся, но кое-какие собственные наблюдения озвучим.
+</p>
+<div  class="container marketing">
+   <div class="row featurette">
+
+     <div  class="col-md-6 mt-5">
+       <h2 id="main" class="featurette-heading">Наш адрес:</h2>
+       <p class="lead"><strong>ООО "ГРАНД ПРОДЖЕКТ КОМПАНИ"</strong></p>
+       <p class="lead">49000, г. Днепр, ул. Святослава Храброго, 12, офис 201<br>
+         <span style=" color: brown;">e-mail: grand.procom@gmail.com</span> <br>
+         +38(050) 831-61-87<br>   
+         +38(066) 718-69-19   
+          </p>
+       <img  src="static/img/logo.png" alt="" style="width: 60%;">
+     </div>
+     <div  class="col-md-2 mt-5">      
+       <iframe id="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2645.8624034434965!2d35.04078101521958!3d48.459169536687185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40dbe3c30021e861%3A0x4a525b3aa303b7da!2z0YPQuy4g0KHQstGP0YLQvtGB0LvQsNCy0LAg0KXRgNCw0LHRgNC-0LPQviwgMTIsINCU0L3RltC_0YDQvsyBLCDQlNC90LXQv9GA0L7Qv9C10YLRgNC-0LLRgdC60LDRjyDQvtCx0LvQsNGB0YLRjCwgNDkwMDA!5e0!3m2!1sru!2sua!4v1641809667591!5m2!1sru!2sua" width="450" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+     </div>
+   </div>
+ </div>
+{% endblock body %}
+

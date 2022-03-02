@@ -1,0 +1,67 @@
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+{% include "security/_messages.html" %}
+{% extends 'base1.html' %}
+
+{% block title %}
+<title>Вход в систему</title>
+{% endblock title %}
+
+{% block body %}
+<style>
+  html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
+
+<main class="form-signin">
+
+<h1 class="h3 mb-3 fw-normal">Форма регистрации:</h1>
+<form action="{{ url_for_security('register') }}" method="POST" name="register_user_form">
+  {{ register_user_form.hidden_tag() }}
+  {{ render_field_with_errors(register_user_form.email, class="form-control", id="floatingInput", placeholder="name@example.com") }}
+  {{ render_field_with_errors(register_user_form.password,type="password", class="form-control", id="floatingPassword", placeholder="Password") }}
+  {% if register_user_form.password_confirm %}
+  {{ render_field_with_errors(register_user_form.password_confirm,type="password", class="form-control", id="floatingPassword", placeholder="Password") }}
+  {% endif %}
+  {{ render_field(register_user_form.submit, class="btn btn-info",value="Регистрация") }}
+</form>
+{% include "security/_menu.html" %}
+</main>
+
+{% endblock body %}

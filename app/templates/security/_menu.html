@@ -1,0 +1,16 @@
+{% if security.registerable or security.recoverable or security.confirmable %}
+<h2 class="mt-5">{{ _("") }}</h2>
+<ul>
+  <a href="{{ url_for_security('login') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}"style="text-decoration: none; color: black;">{{ _('Логин') }}</a><br>
+  {% if security.registerable %}
+  <a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}"style="text-decoration: none; color: black;">{{ _('Регистрация') }}</a><br/>
+  {% endif %}
+  {% if security.recoverable %}
+  <a href="{{ url_for_security('forgot_password') }}"style="text-decoration: none; color: black;">{{ _('Забыл пароль') }}</a><br/>
+  {% endif %}
+  {% if security.confirmable %}
+  <a href="{{ url_for_security('send_confirmation') }}"style="text-decoration: none; color: black;">{{ _('Подтвердить аккаунт') }}</a><br/>
+  {% endif %}
+  <a href="/" style="text-decoration: none; color: black;">{{ _('На главную страницу') }}</a><br/>
+</ul>
+{% endif %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Детали заказа</title>
+{% endblock title %}
+{% block body %}
+
+<style>
+   .container {
+  max-width: 960px;
+}
+
+.lh-condensed { line-height: 1.25; }
+</style>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+   <div class="container-fluid">
+     <a class="navbar-brand m-1" href="/"><span style="font-style: italic;">KSS shop</span></a>
+     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="navbarsExample03">
+       <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-5">
+         <li class="nav-item">
+           <a class="nav-link" aria-current="page" href="/">Главная</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/about">Контакты</a>
+         </li>         
+         <li class="nav-item dropdown">
+           <a class="nav-link dropdown-toggle" href="/" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Товары</a>
+           <ul class="dropdown-menu" aria-labelledby="dropdown03">
+             <li><a class="dropdown-item" href="#">Диски</a></li>
+             <li><a class="dropdown-item" href="#">Легковые шины</a></li>
+             <li><a class="dropdown-item" href="#">Авто товары</a></li>
+           </ul>
+         </li>
+       </ul>           
+       <a href="/admin/login" class="btn btn-outline-light m-1">
+         {% if current_user.is_authenticated and current_user.has_role('admin') %}
+           Админ
+         {% elif current_user.is_authenticated and current_user.has_role('user')%}
+           Гость
+         {% else %}
+           Войти        
+         {% endif %}
+       </a>
+         <a href="/delete_items" class="btn btn-outline-danger m-1">Удалить товары из корзины</a>
+         <div class="dropdown">
+           <a class="btn btn btn-warning m-1 mx-5" href="/" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+             Язык
+           </a>
+       
+           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+             <li><a class="dropdown-item" href="/"><img src="static/img/ukr.png" alt=""> Українська мова</a></li>
+             <li><a class="dropdown-item" href="/"><img src="static/img/rus.png" alt=""> Русский язык</a></li>
+           </ul>  
+         </div>        
+     </div>
+   </div>
+ </nav>
+
+ <div class="container">
+   <div class="py-5 text-center">
+     <img class="d-block mx-auto mb-4" src="/static/img/admin.png" alt="" width="72" height="72">
+     <h2>Заполните форму:</h2>
+        </div> 
+   <div class="row">
+     <div class="col-md-4 order-md-2 mb-4">
+       <h4 class="d-flex justify-content-between align-items-center mb-3">
+         <span class="text-muted">Корзина:</span>
+         <span class="badge badge-secondary badge-pill">3</span>
+       </h4>
+       <ul class="list-group mb-3">
+         {% for key in data[0]['card'] %}
+         <li class="list-group-item d-flex justify-content-between lh-condensed">
+           <div>
+             <h6 class="my-0">{{data[0]['card'][key]['name_of_item']}} - {{data[0]['card'][key]['counter']}} шт.  {{data[0]['card'][key]['price']}} UAH</h6>
+           </div>
+         </li>
+         {% endfor %}
+         
+         <li class="list-group-item d-flex justify-content-between">
+           <span>Всего: (UAH)</span>
+           <strong>{{data[0]['payment']}}</strong>
+         </li>
+       </ul>
+     </div>
+     <div class="col-md-8 order-md-1">
+
+
+       <form method="post">
+         <div class="row">
+           <div class="col-md-6 mb-3">
+             <label for="firstName">Фамилия:</label>
+             <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required>
+             <div class="invalid-feedback">
+              Необходимо ввести корректную фамилию.
+             </div>
+           </div>
+           <div class="col-md-6 mb-3">
+             <label for="lastName">Имя:</label>
+             <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="" required>
+             <div class="invalid-feedback">
+               Необходимо ввести корректное имя.
+             </div>
+           </div>
+         </div>
+         <div class="mb-3">
+           <label for="email">Email <span class="text-muted">(Не обязательно)</span></label>
+           <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
+           <div class="invalid-feedback">
+             Введите корректную электронную почту.
+           </div>
+         </div>
+         <div class="mb-3">
+          <label>Номер телефона:</label>
+          <input type="text" class="form-control" id="phone" name="phone" data-format="ddd ddd-dd-dd" placeholder="099 333 22 22" required>
+          <div class="invalid-feedback">
+            Введите корректную электронную почту.
+          </div>
+        </div>
+ 
+         <hr class="mb-4">
+         <h4>Вид доставки:</h4>
+         <div class="d-block my-3">
+          <div class="custom-control custom-radio">
+            <input  name="delivery" type="radio" class="custom-control-input" value="Самовывоз" required>
+            <label class="custom-control-label">Самовывоз</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input  name="delivery" type="radio" class="custom-control-input" value="Новая почта" required>
+            <label class="custom-control-label">Новая почта</label>
+          </div>
+                   
+        </div>
+
+         <hr class="mb-4">
+ 
+         <h4 class="mb-3">Оплата:</h4>
+ 
+         <div class="d-block my-3">
+           <div class="custom-control custom-radio">
+             <input name="paymentMethod" type="radio" class="custom-control-input" value="Оплата в точке самовывоза" required>
+             <label class="custom-control-label" >Оплата в точке самовывоза</label>
+           </div>
+           <div class="custom-control custom-radio">
+             <input name="paymentMethod" type="radio" class="custom-control-input" value="Оплата в отделении Новая Почта" required>
+             <label class="custom-control-label" >Оплата в отделении Новая Почта</label>
+           </div>
+           <div class="custom-control custom-radio">
+             <input name="paymentMethod" type="radio" class="custom-control-input" value="Оплата на сайте" required>
+             <label class="custom-control-label">Оплата на сайте</label>
+           </div>
+         </div>
+         {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <ul class=flashes>
+                    {% for message in messages %}
+                      <li>{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+           {% endwith %}        
+         <hr class="mb-4">
+         <button class="btn btn-primary btn-lg btn-block" type="submit">Далее</button>
+       </form>
+     </div>
+   </div>
+{% endblock body %}
