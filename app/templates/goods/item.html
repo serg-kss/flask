@@ -1,0 +1,44 @@
+{% extends 'base_about.html' %}
+
+{% block title %}
+<title>{{data[0].name}}</title>
+{% endblock title %}
+
+{% block body %}
+
+<div class="row featurette mt-5">
+   <div class="col-md-7">
+     <h2 class="featurette-heading">{{data[0].name}}</h2>
+     <ul>
+        {% if data[0].size %}<li><span  class="fs-4">Размер: {{data[0].size}}</span></li>{% endif %}
+        {% if data[0].sezon %}<li><span  class="fs-4">Сезон: {{data[0].sezon}}</span></li>{% endif %}
+        {% if data[0].year %}<li><span  class="fs-4">Год выпуска: {{data[0].year}}</span></li>{% endif %}
+        {% if data[0].country %}<li><span  class="fs-4">Страна производитель: {{data[0].country}}</span></li>{% endif %}
+
+        {%if data[0].amount > 0 %}
+            <li><span class="fs-4" style="color: green;">Есть в наличии</span></li>
+            <li><span class="fs-4">На складе: {{data[0].amount}}</span></li>
+            <li><span class="fs-4">Цена: {{data[0].price}} грн.</span></li>
+          
+            <a href="/card/{{ data[0].code_of_item }}" class="btn btn-warning mt-4">В корзину</a>
+         {% else %}
+            <li><span class="fs-4" style="color: red;">Нет в наличии</span></li>
+            <li class="text-muted fw-light">На складе: - </li>        
+            <button type="button" class="btn btn-outline-secondary mt-4" disabled>В корзину</button>
+         {% endif %}   
+     </ul>
+     <p class="fw-semibold">{{data[0].text}}</p>
+   </div>
+   <div class="col-md-5">
+    <!-- <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text><image x="0" y="0" xlink:href="img/pic1.png"></image></svg>-->
+    <img src="data:image/png;base64,{{data[1].img}}" class="d-block w-100" alt="..." style="border: 1px solid black;">
+    
+   </div>
+
+
+
+   </div>
+ </div>
+
+{% endblock body %}
+

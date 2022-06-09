@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_card.html' %}
 
 {% block title %}
 <title>Ваш заказ</title>
@@ -6,52 +6,6 @@
 {% block body %}
 
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
-   <div class="container-fluid">
-     <a class="navbar-brand m-1" href="/"><span style="font-style: italic;">KSS shop</span></a>
-     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
-     </button>
-     <div class="collapse navbar-collapse" id="navbarsExample03">
-       <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-5">
-         <li class="nav-item">
-           <a class="nav-link" aria-current="page" href="/">Главная</a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="/about">Контакты</a>
-         </li>         
-         <li class="nav-item dropdown">
-           <a class="nav-link dropdown-toggle" href="/" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Товары</a>
-           <ul class="dropdown-menu" aria-labelledby="dropdown03">
-             <li><a class="dropdown-item" href="#">Диски</a></li>
-             <li><a class="dropdown-item" href="#">Легковые шины</a></li>
-             <li><a class="dropdown-item" href="#">Авто товары</a></li>
-           </ul>
-         </li>
-       </ul>           
-       <a href="/admin/login" class="btn btn-outline-light m-1">
-         {% if current_user.is_authenticated and current_user.has_role('admin') %}
-           Админ
-         {% elif current_user.is_authenticated and current_user.has_role('user')%}
-           Гость
-         {% else %}
-           Войти        
-         {% endif %}
-       </a>
-         <a href="/delete_items" class="btn btn-outline-danger m-1">Удалить товары из корзины</a>
-         <div class="dropdown">
-           <a class="btn btn btn-warning m-1 mx-5" href="/" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-             Язык
-           </a>
-       
-           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-             <li><a class="dropdown-item" href="/"><img src="static/img/ukr.png" alt=""> Українська мова</a></li>
-             <li><a class="dropdown-item" href="/"><img src="static/img/rus.png" alt=""> Русский язык</a></li>
-           </ul>  
-         </div>        
-     </div>
-   </div>
- </nav>
 
  <div class="row mt-5" align="center">
   <div class="col-12 mt-5">

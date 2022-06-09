@@ -1,5 +1,4 @@
 from datetime import datetime
-from itertools import count
 from flask_login import UserMixin
 from flask_security import RoleMixin
 from app import db, login_manager
@@ -75,14 +74,15 @@ def load_user(user_id):
 
 
 class Img(db.Model):
+    __tablename__ = 'Изображения товара'
     id = db.Column(db.Integer, primary_key=True)
-    img = db.Column(db.Text, unique=True, nullable=False)
+    img = db.Column(db.Text, nullable=False, unique=True)
     name = db.Column(db.Text, nullable=False)
     mimetype = db.Column(db.Text, nullable=False)
     code_of_pic = db.Column(db.String(20),nullable = False, unique=True)
 
 class Goods(db.Model):
-    __tablename__ = 'товары'
+    __tablename__ = 'Tовары'
     id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     code_of_item = db.Column(db.String(20),nullable = False, unique=True)
     name = db.Column(db.String(200), nullable = False)
@@ -90,14 +90,20 @@ class Goods(db.Model):
     price_fondy = db.Column(db.Integer, nullable = False)
     amount = db.Column(db.Integer, nullable = False)  
     text = db.Column(db.Text, nullable = True)
+    category = db.Column(db.Integer, nullable = False)
+    size = db.Column(db.String(50), nullable = True)
+    sezon = db.Column(db.String(20), nullable = True)
+    year = db.Column(db.Integer, nullable = True)
+    country = db.Column(db.String(20), nullable = True)
     
- 
+    
    
     def __repr__(self) -> str:
        return self.name
    
    
 class Orders(db.Model):
+    __tablename__ = 'Заказы'
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(30), nullable = False,unique=True)
     date = db.Column(db.String(30), nullable = False)
@@ -111,3 +117,6 @@ class Orders(db.Model):
     amount = db.Column(db.Integer, nullable = False)
     delivery = db.Column(db.String(30), nullable = False)
     payment = db.Column(db.String(30), nullable = False)
+    
+    
+db.create_all()

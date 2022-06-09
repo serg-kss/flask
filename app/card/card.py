@@ -12,14 +12,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-
-
 card_page_bp = Blueprint('card',__name__)
 bot = telebot.TeleBot('5181107571:AAEw0wmrv8sFq4EgLOn1c9myHCOsgP_14LM')
-
-
-
-
 
 
 @app.route('/card/<pk>',  methods =['POST', 'GET'])
@@ -78,7 +72,7 @@ def delete_one_items(pk):
 def plus_one_item(pk):
                
    if pk in session['card']:
-      if session['card'][pk]['amount'] >= session['card'][pk]['counter']:
+      if session['card'][pk]['amount'] > session['card'][pk]['counter']:
          session['card'][pk]['counter']=session['card'][pk].get('counter')+1
          session.modified = True
          return redirect('/card')
@@ -143,9 +137,9 @@ def check_out():
       counter = 0
       for key in session['card']:
          counter = counter + 1          
-         name = name + str(counter) + "| " + session['card'][key]['name_of_item']+ "; "
-         count = count + str(counter) + "| " + str(session['card'][key]['counter'])+ " " +"шт. "
-         price = price + str(counter) + "| " + str(session['card'][key]['price']) + " грн. "
+         name = name + str(counter) + "|  " + session['card'][key]['name_of_item']+ ";\n"
+         count = count + str(counter) + "|  " + str(session['card'][key]['counter'])+ " " +"шт.\n"
+         price = price +  str(counter) + "|  " + str(session['card'][key]['price']) + " грн.\n"
             
       amount = session['payment']      
       delivery = request.form['delivery']         
@@ -178,31 +172,43 @@ def check_out():
                print('hren tam bil')
          
          # create message object instance
-         msg = MIMEMultipart()
-         message = f"Сформирован новый заказ № {order_number}: Наименование {name}, код {code_of_item}, колличество {count}, цена {price}, доставка {delivery}, оплата {payment}, имя клиента {buyer_data}, телефон {buyer_tel}"
-         message_m = MIMEText(message, 'plain','utf-8') 
-         # setup the parameters of the message
-         password = "12Serg0591"
-         msg['From'] = "pythontestflask@gmail.com"
-         msg['To'] = "pythontestflask@gmail.com"
-         msg['Subject'] = f"Новый Заказ {order_number}" 
+         try:
+            msg = MIMEMultipart()
+            message = f"Сформирован новый заказ № {order_number}: Наименование {name}, код {code_of_item}, колличество {count}, цена {price}, доставка {delivery}, оплата {payment}, имя клиента {buyer_data}, телефон {buyer_tel}"
+            message_m = MIMEText(message, 'plain','utf-8') 
+         #setup the parameters of the message
+            password = "12Serg0591"
+            msg['From'] = "korobkoss1205@gmail.com"
+            msg['To'] = "korobkoss1205@gmail.com"
+            msg['Subject'] = f"Новый Заказ {order_number}" 
          # add in the message body
-         msg.attach(message_m)
+            msg.attach(message_m)
          #create server
-         server = smtplib.SMTP('smtp.gmail.com: 587')
-         server.starttls()
+            server = smtplib.SMTP('smtp.gmail.com: 587')
+            server.starttls()
          # Login Credentials for sending the mail
-         server.login(msg['From'], password) 
+            server.login(msg['From'], password) 
          # send the message via the server.
-         server.sendmail(msg['From'], msg['To'], msg.as_string().encode("utf-8"))
-         server.quit()
+            server.sendmail(msg['From'], msg['To'], msg.as_string().encode("utf-8"))
+            server.quit()
+         except:
+            print('hren tam bil--email doest work')
          
-         bot.send_message(chat_id=526088889,  text=message)
-                                                                
-         session.pop('card')
-         session.pop('payment')
+         
+         message_for_bot(order_number,
+                         name,
+                         code_of_item,
+                         count,
+                         price,
+                         amount,
+                         delivery,
+                         payment,
+                         buyer_data,
+                         buyer_tel)                                                              
+         session_pop(session)
          url = f'/check_out_delivery/method1/{order_number}'              
-         return redirect(url)      
+         return redirect(url) 
+           
       elif delivery == "Самовывоз" and payment == "Оплата на сайте":
          order = Orders(order_number=order_number,
                      date=date,
@@ -228,11 +234,23 @@ def check_out():
                db.session.commit()
             except:
                print('hren tam bil') 
-         
-         session.pop('card')
-         session.pop('payment')
+                       
+         message_for_bot(order_number,
+                         name,
+                         code_of_item,
+                         count,
+                         price,
+                         amount,
+                         delivery,
+                         payment,
+                         buyer_data,
+                         buyer_tel)
+                 
+         session_pop(session)
          url = f'/check_out_delivery/method2/{order_number}'              
          return redirect(url)
+      
+      
       elif delivery == "Новая почта" and payment == "Оплата в отделении Новая Почта":
          order = Orders(order_number=order_number,
                      date=date,
@@ -248,10 +266,11 @@ def check_out():
                      payment=payment                    
                      )
          db.session.add(order)
-         db.session.commit()
-         
+         db.session.commit()        
          url = f'/check_out_delivery/method3/{order_number}'              
          return redirect(url)
+      
+      
       elif delivery == "Новая почта" and payment == "Оплата на сайте":
          order = Orders(order_number=order_number,
                      date=date,
@@ -268,8 +287,7 @@ def check_out():
                      )
          db.session.add(order)
          db.session.commit()
-         session.pop('card')
-         session.pop('payment')
+         session_pop(session)
          url = f'/check_out_delivery/<{order_number}>'              
          return redirect(url)     
       else:
@@ -282,9 +300,7 @@ def check_out():
 @app.route('/check_out_delivery/method1/<pk>', methods=['get', 'post'])
 def check_out_delivery_m1(pk):
    order_number = pk
-   string = f"Заказ {order_number} успешно сформирован, мы с Вами свяжемся в ближайшее аремя!"
-
-      
+   string = order_finished(order_number)   
    return render_template('card/check_out_delivery.html', data=[string])
 
 
@@ -299,6 +315,7 @@ def check_out_delivery_m2(pk):
       "amount": fondy_sum
    }
    try:
+      
       url = checkout.url(data).get('checkout_url')
       return redirect(url)
    except BaseException:     
@@ -307,13 +324,12 @@ def check_out_delivery_m2(pk):
 
 @app.route('/check_out_delivery/method3/<pk>', methods =['POST', 'GET'])
 def check_out_delivery_m3(pk):
+   
    pk=pk
    
    def get():
-      url = 'https://api.novaposhta.ua/v2.0/json/'
-      
+      url = 'https://api.novaposhta.ua/v2.0/json/'     
       x_json = """{"modelName": "Address", "calledMethod": "getCities", "apiKey": "e3b0e87c7311099d1f91a0282ab542b7"}"""
-
       r = requests.post(url=url, data=x_json)
       unswer_dict = dict(r.json())
       return unswer_dict
@@ -323,6 +339,9 @@ def check_out_delivery_m3(pk):
    if request.method == 'POST':
       code_of_city = request.form['city']
       session['code_of_city']=code_of_city
+      if session['code_of_city'] == '':
+         flash(f"Вы не указали город доставки!")
+         return redirect(f'/check_out_delivery/method3/{pk}')
       r_url = f'/check_out_delivery/method3/city/{pk}'
       return redirect(r_url)
       
@@ -352,11 +371,18 @@ def check_out_delivery_m3_city(pk):
       return unswer_dict
         
    post_points_dict = get()
+   if post_points_dict['data'] == []:
+         flash(f"Простите не можем доставить в данный пункт")
+         return redirect(f'/check_out_delivery/method3/{pk}') 
    name_of_city = str(session['code_of_city'])
    
    if request.method == 'POST':
       delivery_point = request.form['point']
       session['delivery_point'] = delivery_point
+      if session['delivery_point'] == '':
+         flash(f"Вы не указали отделение!")
+         return redirect(f'/check_out_delivery/method3/city/{pk}')
+         
       url_order_close = f"/check_out_delivery/method3/order_close/{pk}"
       return redirect(url_order_close)
    
@@ -375,25 +401,47 @@ def post_order_close(pk):
             except:
                print('hren tam bil') 
    
-   string_order = f"Заказ {pk} успешно сформирован, мы с Вами свяжемся в ближайшее аремя!"
+   string_order = order_finished(pk)
    string_delivery = f"Доставка Новая Почта: г. {session['code_of_city']} в {session['delivery_point']}"
+   order_for_bot = Orders.query.filter_by(order_number=str(pk)).first()
+   order_for_bot.delivery = string_delivery
+   db.session.commit()
+   message_for_bot(order_for_bot.order_number,
+                   order_for_bot.name,
+                   order_for_bot.code_of_item,
+                   order_for_bot.count,
+                   order_for_bot.price,
+                   order_for_bot.amount,
+                   string_delivery,
+                   order_for_bot.payment,
+                   order_for_bot.buyer_data,
+                   order_for_bot.buyer_tel)   
    session.pop('code_of_city')
    session.pop('delivery_point')
-   session.pop('card')
-   session.pop('payment')
+   session_pop(session)
       
    return render_template('card/check_out_delivery.html', data = [string_order, string_delivery])
 
 
-   
+def message_for_bot(order_number, 
+                    name, 
+                    code_of_item, 
+                    count, 
+                    price,
+                    amount, 
+                    delivery, 
+                    payment, 
+                    buyer_data, 
+                    buyer_tel):
+   message = f"Новый заказ № {order_number}!\n\tНаименование товара:\n{name}\n\tАртикул товара:\n{code_of_item}\n\n\tКолличество:\n{count}\n\tЦена:\n{price}\n\tНа сумму: {amount} грн;\n\n\tДоставка:\n{delivery};\n\n\tОплата:\n{payment};\n\n\tФИО:\n{buyer_data};\n\n\tТел: {buyer_tel}"
+   bot.send_message(chat_id=526088889,  text=message)
 
 
+def order_finished (order):
+   text = f"Заказ {order} успешно сформирован, мы с Вами свяжемся в ближайшее время!"
+   return text
 
 
-   
-
-
-
-
-
-
+def session_pop (session):
+   session.pop('card')
+   session.pop('payment')

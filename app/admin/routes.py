@@ -24,11 +24,14 @@ def upload():
         mimetype = pic.mimetype
         if not filename or not mimetype:
             return 'Bad upload!', 400
-
-        img = Img(img=(str(image_64_encode,'utf-8')), name=filename, mimetype=mimetype, code_of_pic=code)
-        db.session.add(img)
-        db.session.commit()
-        flash(f"Вы добавили новое изображение с артикулом {code}")
+        try:
+            img = Img(img=(str(image_64_encode,'utf-8')), name=filename, mimetype=mimetype, code_of_pic=code)
+            db.session.add(img)
+            db.session.commit()
+            flash(f"Вы добавили новое изображение с артикулом {code}")
+        except:
+            flash(f"Артикул не уникален!")
+            
 
         return redirect('/upload_img_to_database')
    

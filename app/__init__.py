@@ -14,17 +14,19 @@ def create_app():
 app = create_app()
 app.config.from_pyfile('../config-extended.py')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///internetshop.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12Serg0591@localhost/internetShop'
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECURITY_PASSWORD_SALT'] = '12Serg0591'
 app.secret_key = '12Serg0591'
-app.permanent_session_lifetime = datetime.timedelta(days=365)
+app.permanent_session_lifetime = datetime.timedelta(days=30)
 api = Api(app)
-
 
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-db.create_all()
+
 
 
 # Ставим редирект, если пользователь не авторизован, для страниц где обязательна авторизация
@@ -35,11 +37,19 @@ login_manager.login_view = 'admin_blueprint.login'
 from app.admin.routes import admin_bp
 from app.main_page.main_page import main_page_bp
 from app.card.card import card_page_bp
+from app.goods.disks import disks_bp
+from app.goods.tyres import tyres_bp
+from app.goods.others import others_bp
+from app.goods.item import item_bp
 
 
 app.register_blueprint(card_page_bp)
 app.register_blueprint(admin_bp, url_prefix="/admin")
 app.register_blueprint(main_page_bp)
+app.register_blueprint(disks_bp)
+app.register_blueprint(tyres_bp)
+app.register_blueprint(others_bp)
+app.register_blueprint(item_bp)
 
 
 
